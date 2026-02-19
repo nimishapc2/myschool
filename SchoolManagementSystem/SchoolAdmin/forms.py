@@ -9,10 +9,23 @@ class TeacherCreationForm(UserCreationForm):
         fields = ['username', 'email']
 
 
+from django.core.exceptions import ValidationError
+import re
+
 class TeacherProfileForm(forms.ModelForm):
+
     class Meta:
         model = Teacher
-        fields = ['name', 'address', 'contact_number', 'qualification', 'subject']
+        fields = ['name', 'contact_number', 'qualification', 'subject', 'address']
+
+    def clean_contact_number(self):
+        contact = self.cleaned_data.get("contact_number")
+
+        if not re.fullmatch(r'\d{10}', contact):
+            raise ValidationError("Contact number must be exactly 10 digits.")
+
+        return contact
+
 
 
 

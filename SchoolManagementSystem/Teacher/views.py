@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from SchoolAdmin.models import TeacherAssignment,Teacher,Student,Subject,Division
 from Teacher.models import Mark,Assignment,Note
 from django.contrib import messages
+from Student.models import StudentSubmission
+
 
 
 @login_required
@@ -293,60 +295,30 @@ def manage_notes(request):
         'notes': notes
     })
 
-# Student Dashboard
+# Submitted Assignment View
 
-from django.db.models import Avg, Sum
-from .models import Student
-from Teacher.models import Note, Assignment, Mark
-from SchoolAdmin.models import Announcement,Attendance
 @login_required
-def student_dashboard(request):
+def teacher_view_submission(request):
 
-    if request.user.role != "STUDENT":
-        return render(request, "unauthorized.html")
+    # Optional: If you have role field
+    if not request.user.is_staff:
+        return redirect('login')
 
-    student = get_object_or_404(Student, user=request.user)
-
-    # 1️⃣ Announcements
-    announcements = Announcement.objects.all().order_by('-created_at')
-
-    # 2️⃣ Assignments for student class
-    assignments = Assignment.objects.filter(
-        school_class=student.school_class,
-        division=student.division
-    ).order_by('-created_at')
-
-    # 3️⃣ Notes for download
-    notes = Note.objects.filter(
-        school_class=student.school_class,
-        division=student.division
+    submissions = StudentSubmission.objects.select_related(
+        'student', 'assignment'
     )
 
-    # 4️⃣ Attendance Percentage
-    total_classes = Attendance.objects.filter(student=student).count()
-    present_count = Attendance.objects.filter(
-        student=student,
-        status="Present"
-    ).count()
+    if request.method == "POST":
+        submission_id = request.POST.get("submission_id")
+        marks = request.POST.get("marks")
 
-    attendance_percentage = 0
-    if total_classes > 0:
-        attendance_percentage = round((present_count / total_classes) * 100, 2)
+        submission = get_object_or_404(StudentSubmission, id=submission_id)
+        submission.marks = marks
+        submission.save()
 
-    # 5️⃣ Progress Card
-    marks = Mark.objects.filter(student=student)
+        return redirect('teacher_view_submission')
 
-    overall_average = marks.aggregate(avg=Avg('mark'))['avg']
-    if overall_average:
-        overall_average = round(overall_average, 2)
-    else:
-        overall_average = 0
-
-    return render(request, "student_dashboard.html", {
-        "student": student,
-        "announcements": announcements,
-        "assignments": assignments,
-        "attendance_percentage": attendance_percentage,
-        "overall_average": overall_average,
-        "notes": notes,
+    return render(request, "teacher_view_submission.html", {
+        "submissions": submissions
     })
+

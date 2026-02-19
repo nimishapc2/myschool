@@ -24,6 +24,7 @@ urlpatterns = [
    path('manage-assignments/', views.manage_assignments, name='manage_assignments'),
    path('upload-notes/', views.upload_notes, name='upload_notes'),
    path('manage-notes/', views.manage_notes, name='manage_notes'),
+   path('view-submission/', views.teacher_view_submission, name='teacher_view_submission'),
 
 
 ]
