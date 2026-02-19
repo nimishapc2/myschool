@@ -301,8 +301,9 @@ def manage_notes(request):
 def teacher_view_submission(request):
 
     # Optional: If you have role field
-    if not request.user.is_staff:
+    if request.user.role != 'TEACHER':
         return redirect('login')
+        
 
     submissions = StudentSubmission.objects.select_related(
         'student', 'assignment'
@@ -315,7 +316,7 @@ def teacher_view_submission(request):
         submission = get_object_or_404(StudentSubmission, id=submission_id)
         submission.marks = marks
         submission.save()
-
+        messages.success(request, "Note updated successfully!")
         return redirect('teacher_view_submission')
 
     return render(request, "teacher_view_submission.html", {

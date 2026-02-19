@@ -90,20 +90,34 @@
 
         <div class="card-body announcement-scroll">
 
-            {% for announcement in announcements %}
-                <div class="mb-3">
-                    <strong>{{ announcement.title }}</strong>
-                    <p>{{ announcement.message }}</p>
-                    <small class="text-muted">
-                        Posted on {{ announcement.created_at }}
-                    </small>
-                    <hr>
-                </div>
-            {% empty %}
-                <p>No announcements available.</p>
-            {% endfor %}
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
 
-        </div>
+    {% if announcements %}
+        {% for announcement in announcements %}
+            <div class="mb-3">
+                <h6 class="fw-bold text-primary mb-1">
+                    {{ announcement.title }}
+                </h6>
+
+                <p class="mb-1">
+                    {{ announcement.message }}
+                </p>
+
+                <small class="text-muted">
+                    {{ announcement.created_at|date:"d M Y, h:i A" }}
+                </small>
+
+                {% if not forloop.last %}
+                    <hr>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No new announcements.</p>
+    {% endif %}
+
+</div>
+
     </div>
 
 </div>

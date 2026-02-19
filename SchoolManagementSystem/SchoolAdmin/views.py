@@ -172,33 +172,46 @@ def teacher_assignment_view(request):
 
 # Add student
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db import transaction
 
-@login_required
 @login_required
 def add_student(request):
 
     if request.user.role != "ADMIN":
+        messages.error(request, "You are not authorized to access this page.")
         return redirect("login")
 
     if request.method == "POST":
-
         user_form = StudentCreationForm(request.POST)
         student_form = StudentForm(request.POST)
-
+        print("USER VALID:", user_form.is_valid())
+        print("STUDENT VALID:", student_form.is_valid())
+        print("USER ERRORS:", user_form.errors)
+        print("STUDENT ERRORS:", student_form.errors)
         if user_form.is_valid() and student_form.is_valid():
+            try:
+                with transaction.atomic():
 
-            # Create login account
-            user = user_form.save(commit=False)
-            user.role = "STUDENT"
-            user.save()
+                    # Create User
+                    user = user_form.save(commit=False)
+                    user.role = "STUDENT"
+                    user.save()
 
-            # Create student profile
-            student = student_form.save(commit=False)
-            student.user = user
-            student.save()
+                    # Create Student Profile
+                    student = student_form.save(commit=False)
+                    student.user = user
+                    student.save()
 
-            messages.success(request, "Student added successfully!")
-            return redirect("admin_dashboard")
+                    messages.success(request, "Student added successfully!")
+                    return redirect("admin_dashboard")
+
+            except Exception as e:
+                messages.error(request, f"Error occurred: {str(e)}")
+        else:
+            messages.error(request, "Please correct the errors below.")
 
     else:
         user_form = StudentCreationForm()
