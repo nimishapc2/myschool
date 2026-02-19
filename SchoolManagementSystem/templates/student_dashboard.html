@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #eef2f3, #d9e4f5);
+        }
+
+        .card-hover {
+            transition: 0.3s;
+            border-radius: 15px;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+        }
+
+        .announcement-scroll {
+            height: 250px;
+            overflow-y: auto;
+        }
+
+        .dashboard-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <h3 class="dashboard-title mb-4">
+        Welcome, {{ student.name }}
+    </h3>
+
+    <!-- QUICK ACTION CARDS -->
+    <div class="row text-center mb-4">
+
+        <div class="col-md-3">
+            <a href="{% url 'student_notes' %}" class="text-decoration-none">
+                <div class="card bg-primary text-white card-hover shadow">
+                    <div class="card-body">
+                        <h5>📚 Download Notes</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'student_assignments' %}" class="text-decoration-none">
+                <div class="card bg-success text-white card-hover shadow">
+                    <div class="card-body">
+                        <h5>📝 View Assignments</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'attendance_graph' %}" class="text-decoration-none">
+                <div class="card bg-warning text-dark card-hover shadow">
+                    <div class="card-body">
+                        <h5>📊 Attendance</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'student_marks' %}" class="text-decoration-none">
+                <div class="card bg-danger text-white card-hover shadow">
+                    <div class="card-body">
+                        <h5>📈 Marks</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ANNOUNCEMENTS SECTION -->
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            📢 Latest Announcements
+        </div>
+
+        <div class="card-body announcement-scroll">
+
+            {% for announcement in announcements %}
+                <div class="mb-3">
+                    <strong>{{ announcement.title }}</strong>
+                    <p>{{ announcement.message }}</p>
+                    <small class="text-muted">
+                        Posted on {{ announcement.created_at }}
+                    </small>
+                    <hr>
+                </div>
+            {% empty %}
+                <p>No announcements available.</p>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

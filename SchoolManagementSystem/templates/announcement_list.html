@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Announcements</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+
+        .table thead {
+            background-color: #4e73df;
+            color: white;
+        }
+
+        .btn-sm {
+            border-radius: 20px;
+        }
+
+        .search-box {
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="bi bi-megaphone-fill me-2"></i>
+                Manage Announcements
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- SUCCESS MESSAGE -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- SEARCH -->
+            <form method="GET" class="mb-4 d-flex">
+                <input type="text" name="q" value="{{ request.GET.q }}"
+                       class="form-control search-box me-2"
+                       placeholder="Search announcements...">
+                <button class="btn btn-primary">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+            <!-- TABLE -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th style="width:5%">#</th>
+                            <th style="width:25%">Title</th>
+                            <th style="width:40%">Message</th>
+                            <th style="width:15%">Date</th>
+                            <th style="width:15%">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for a in announcements %}
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+
+                            {% if edit_id == a.id|stringformat:"s" %}
+                            <!-- EDIT MODE -->
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="announcement_id" value="{{ a.id }}">
+
+                                <td>
+                                    <input type="text" name="title"
+                                           value="{{ a.title }}"
+                                           class="form-control">
+                                </td>
+
+                                <td>
+                                    <textarea name="message"
+                                              class="form-control"
+                                              rows="2">{{ a.message }}</textarea>
+                                </td>
+
+                                <td>{{ a.created_at|date:"d M Y" }}</td>
+
+                                <td>
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+
+                                    <a href="{% url 'SchoolAdmin:announcement_list' %}"
+                                       class="btn btn-secondary btn-sm">
+                                        <i class="bi bi-x-circle"></i>
+                                    </a>
+                                </td>
+                            </form>
+
+                            {% else %}
+                            <!-- NORMAL MODE -->
+
+                            <td>{{ a.title }}</td>
+                            <td>{{ a.message|truncatechars:80 }}</td>
+                            <td>{{ a.created_at|date:"d M Y" }}</td>
+
+                            <td>
+                                <!-- Edit -->
+                                <a href="?edit={{ a.id }}"
+                                   class="btn btn-warning btn-sm text-white">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <!-- Delete -->
+                                <a href="?delete={{ a.id }}"
+                                   onclick="return confirm('Are you sure?')"
+                                   class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+
+                            {% endif %}
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                No announcements found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

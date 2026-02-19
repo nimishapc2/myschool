@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Assignments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background:#f4f6f9;">
+<div class="container mt-5">
+
+    <!-- Search Card -->
+    <div class="card shadow rounded-4 mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Search Teacher</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET">
+                <div class="row">
+                    <div class="col-md-8">
+                        <select name="teacher" class="form-select" required>
+                            <option value="">Select Teacher</option>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}"
+                                {% if selected_teacher and teacher.id == selected_teacher.id %}
+                                    selected
+                                {% endif %}>
+                                    {{ teacher.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button class="btn btn-primary w-100">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    {% if assignments %}
+
+    <!-- Assignment Table -->
+    <div class="card shadow rounded-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                Assignments of {{ selected_teacher.name }}
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Subject</th>
+                        <th>Class</th>
+                        <th>Division</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for assignment in assignments %}
+                <tr>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="assignment_id" value="{{ assignment.id }}">
+
+                        <td>
+                            <select name="subject"
+                                    class="form-select form-select-sm"
+                                    disabled>
+                                {% for subject in subjects %}
+                                    <option value="{{ subject.id }}"
+                                    {% if subject.id == assignment.subject.id %}
+                                        selected
+                                    {% endif %}>
+                                        {{ subject.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+
+                        <td>{{ assignment.division.school_class.name }}</td>
+
+                        <td>
+                            <select name="division"
+                                    class="form-select form-select-sm"
+                                    disabled>
+                                {% for division in divisions %}
+                                    <option value="{{ division.id }}"
+                                    {% if division.id == assignment.division.id %}
+                                        selected
+                                    {% endif %}>
+                                        {{ division.school_class.name }} - {{ division.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+
+                        <td class="d-flex gap-2">
+                            <button type="button"
+                                    class="btn btn-sm btn-warning"
+                                    onclick="enableEdit(this)">
+                                Edit
+                            </button>
+
+                            <button type="submit"
+                                    name="delete"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete this assignment?');">
+                                Delete
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<script>
+function enableEdit(button) {
+    const row = button.closest("tr");
+    const selects = row.querySelectorAll("select");
+
+    selects.forEach(select => select.disabled = false);
+
+    button.innerText = "Save";
+    button.classList.remove("btn-warning");
+    button.classList.add("btn-success");
+    button.type = "submit";
+}
+</script>
+
+</body>
+</html>

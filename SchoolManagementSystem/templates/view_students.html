@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Students</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background:#f4f6f9;">
+
+<div class="container mt-5">
+
+    <!-- 🔍 SEARCH CARD -->
+    <div class="card shadow-lg border-0 rounded-4 mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Search Students</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET">
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+                        <input type="text"
+                               name="name"
+                               class="form-control"
+                               placeholder="Search by Name">
+                    </div>
+
+                    <div class="col-md-4">
+                        <select name="class" class="form-select">
+                            <option value="">Select Class</option>
+                            {% for cls in classes %}
+                                <option value="{{ cls.id }}">
+                                    {{ cls.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <select name="division" class="form-select">
+                            <option value="">Select Division</option>
+                            {% for div in divisions %}
+                                <option value="{{ div.id }}">
+                                    {{ div.school_class.name }} - {{ div.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="text-end mt-3">
+                    <button class="btn btn-primary">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 📋 RESULT TABLE -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Student Results</h5>
+        </div>
+
+        <div class="card-body">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Guardian</th>
+                        <th>Contact</th>
+                        <th>Address</th>
+                        <th>Class</th>
+                        <th>Division</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% if students == None %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            🔍 Please search to view students
+                        </td>
+                    </tr>
+
+                {% elif students %}
+
+                    {% for student in students %}
+                    <tr>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student.id }}">
+
+                            <td>
+                                <input type="text" name="name"
+                                       value="{{ student.name }}"
+                                       class="form-control form-control-sm"
+                                       readonly>
+                            </td>
+
+                            <td>
+                                <input type="text" name="guardian_name"
+                                       value="{{ student.guardian_name }}"
+                                       class="form-control form-control-sm"
+                                       readonly>
+                            </td>
+
+                            <td>
+                                <input type="text" name="contact_number"
+                                       value="{{ student.contact_number }}"
+                                       class="form-control form-control-sm"
+                                       readonly>
+                            </td>
+
+                            <td>
+                                <input type="text" name="address"
+                                       value="{{ student.address }}"
+                                       class="form-control form-control-sm"
+                                       readonly>
+                            </td>
+
+                            <td>
+                                {{ student.division.school_class.name }}
+                            </td>
+
+                            <td>
+                                <select name="division"
+                                        class="form-select form-select-sm"
+                                        disabled>
+                                    {% for div in divisions %}
+                                        <option value="{{ div.id }}"
+                                        {% if div.id == student.division.id %}
+                                            selected
+                                        {% endif %}>
+                                            {{ div.school_class.name }} - {{ div.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+
+                            <td class="d-flex gap-2">
+
+                                <button type="button"
+                                        class="btn btn-sm btn-warning"
+                                        onclick="enableEdit(this)">
+                                    Edit
+                                </button>
+
+                                <button type="submit"
+                                        name="update"
+                                        class="btn btn-sm btn-success d-none">
+                                    Save
+                                </button>
+
+                                <button type="submit"
+                                        name="delete"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Delete this student?');">
+                                    Delete
+                                </button>
+
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-danger">
+                            ❌ No students found
+                        </td>
+                    </tr>
+                {% endif %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+function enableEdit(button) {
+    const row = button.closest("tr");
+    const inputs = row.querySelectorAll("input");
+    const select = row.querySelector("select");
+
+    inputs.forEach(input => {
+        input.removeAttribute("readonly");
+    });
+
+    select.removeAttribute("disabled");
+
+    button.classList.add("d-none");
+    row.querySelector("button[name='update']").classList.remove("d-none");
+}
+</script>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'SchoolAdmin:dashboard' %}"
+       class="btn btn-outline-dark">
+        ⬅ Back to Dashboard
+    </a>
+</div>
+
+</body>
+</html>

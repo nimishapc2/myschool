@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #f8f9fc, #eef2f7);
+        }
+
+        .dashboard-header {
+            background: #4e73df;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .dashboard-card {
+            border: none;
+            border-radius: 20px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            color: #4e73df;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="dashboard-header shadow mb-5">
+        <h2><i class="bi bi-person-badge-fill me-2"></i> Teacher Dashboard</h2>
+        <p class="mb-0">Welcome back! Manage your classes, marks and assignments.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- View Assigned Classes -->
+        <div class="col-md-4">
+            <a href="{% url 'teacher_assignments' %}">
+                <div class="card dashboard-card shadow-sm p-4 text-center">
+                    <div class="card-icon mb-3">
+                        <i class="bi bi-easel-fill"></i>
+                    </div>
+                    <h5 class="section-title">Assigned Classes</h5>
+                    <p class="text-muted">View your assigned classes & divisions</p>
+                    
+                </div>
+            </a>
+        </div>
+
+        <!-- MARKS SECTION -->
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow-sm p-4">
+
+                <div class="text-center mb-3">
+                    <i class="bi bi-clipboard-data-fill card-icon"></i>
+                </div>
+
+                <h5 class="text-center section-title">Marks</h5>
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{% url 'add_marks' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Add Marks
+                    </a>
+                    <a href="{% url 'view_marks' %}" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-eye-fill me-1"></i> View Marks
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ASSIGNMENTS SECTION -->
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow-sm p-4">
+
+                <div class="text-center mb-3">
+                    <i class="bi bi-journal-text card-icon"></i>
+                </div>
+
+                <h5 class="text-center section-title">Assignments</h5>
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{% url 'post_assignment' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-square me-1"></i> Post Assignment
+                    </a>
+                    <a href="{% url 'manage_assignments' %}" class="btn btn-outline-warning btn-sm">
+                        <i class="bi bi-gear-fill me-1"></i> Manage Assignments
+                    </a>
+                    <a href="#" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-upload me-1"></i> View Submissions
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+V
+
+
+    </div>
+
+
+<div class="col-md-4">
+            <div class="card dashboard-card shadow-sm p-4">
+
+                <div class="text-center mb-3">
+                    <i class="bi bi-journal-text card-icon"></i>
+                </div>
+
+                <h5 class="text-center section-title">Notes</h5>
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{% url 'upload_notes' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-square me-1"></i> Upload Notes
+                    </a>
+                    <a href="{% url 'manage_notes' %}" class="btn btn-outline-warning btn-sm">
+                        <i class="bi bi-gear-fill me-1"></i> Manage Notes
+                    </a>
+                    
+                </div>
+
+            </div>
+        </div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<html>
+    <body>
+        <div class="container mt-4">
+    <h4>📝 View & Upload Assignments</h4>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <table class="table table-bordered mt-3">
+        <tr>
+            <th>Subject</th>
+            <th>Title</th>
+            <th>Posted On</th>
+            <th>Upload</th>
+        </tr>
+
+        {% for assignment in assignments %}
+        <tr>
+            <td>{{ assignment.subject.name }}</td>
+            <td>{{ assignment.title }}</td>
+            <td>{{ assignment.created_at }}</td>
+            <td>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden"
+                           name="assignment_id"
+                           value="{{ assignment.id }}">
+
+                    <input type="file"
+                           name="file"
+                           class="form-control mb-2"
+                           required>
+
+                    <button class="btn btn-success btn-sm">
+                        Submit
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">
+                No assignments available.
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+    </body>
+</html>

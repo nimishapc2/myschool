@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subject Assignments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body style="background-color:#f4f6f9;">
+
+<div class="container py-5">
+
+    <!-- ================= PAGE TITLE ================= -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark">
+            <i class="bi bi-diagram-3-fill text-primary"></i>
+            Subject Assignments
+        </h3>
+    </div>
+
+
+    <!-- ================= SUCCESS / ERROR MESSAGES ================= -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <!-- ================= ASSIGNMENT FORM ================= -->
+    <div class="card shadow-lg border-0 rounded-4 mb-5">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h5 class="mb-0">
+                <i class="bi bi-plus-circle"></i> Assign Subject to Teacher
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <!-- Teacher -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Select Teacher</label>
+                        <select name="teacher" class="form-select" required>
+                            <option value="">-- Choose Teacher --</option>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">
+                                    {{ teacher }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Select Subject</label>
+                        <select name="subject" class="form-select" required>
+                            <option value="">-- Choose Subject --</option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.id }}">
+                                    {{ subject.name }} ({{ subject.school_class }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Division -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Select Division</label>
+                        <select name="division" class="form-select" required>
+                            <option value="">-- Choose Division --</option>
+                            {% for division in divisions %}
+                                <option value="{{ division.id }}">
+                                    {{ division.school_class }} - {{ division.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-success px-4 shadow-sm">
+                        <i class="bi bi-check-circle"></i> Assign
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ================= ASSIGNMENT TABLE ================= -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-dark text-white rounded-top-4">
+            <h5 class="mb-0">
+                <i class="bi bi-list-ul"></i> Existing Assignments
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Teacher</th>
+                            <th>Subject</th>
+                            <th>Class</th>
+                            <th>Division</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assignment in assignments %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td class="fw-semibold">
+                                {{ assignment.teacher }}
+                            </td>
+                            <td>
+                                {{ assignment.subject.name }}
+                            </td>
+                            <td>
+                                {{ assignment.division.school_class }}
+                            </td>
+                            <td>
+                                {{ assignment.division.name }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                No assignments yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

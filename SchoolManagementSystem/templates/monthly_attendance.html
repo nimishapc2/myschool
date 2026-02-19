@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monthly Attendance Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>📊 Monthly Attendance Report</h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Filter Form -->
+            <form method="get" class="row g-3">
+
+    <div class="col-md-4">
+        <label class="form-label">Class</label>
+        <select name="class_id" class="form-select" required>
+            <option value="">Select Class</option>
+            {% for c in classes %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Division</label>
+        <select name="division_id" class="form-select" required>
+            <option value="">Select Division</option>
+            {% for d in divisions %}
+            <option value="{{ d.id }}">
+                {{ d.school_class.name }} - {{ d.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Month</label>
+        <input type="month" name="month" class="form-control" required>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-success w-100">
+            Generate Report
+        </button>
+    </div>
+
+</form>
+
+
+            {% if report %}
+            <hr class="my-4">
+
+            <div class="alert alert-info text-center">
+                <strong>Total Days in Month:</strong> {{ total_working_days }}
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-center align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Student Name</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Attendance %</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for r in report %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ r.student.name }}</td>
+                            <td class="text-success fw-bold">{{ r.present }}</td>
+                            <td class="text-danger fw-bold">{{ r.absent }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if r.percentage >= 75 %}
+                                        bg-success
+                                    {% elif r.percentage >= 50 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-danger
+                                    {% endif %}">
+                                    {{ r.percentage }}%
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+<a href="{% url 'SchoolAdmin:monthly_attendance_excel' %}?class_id={{ request.GET.class_id }}&division_id={{ request.GET.division_id }}&month={{ request.GET.month }}"
+   class="btn btn-success">
+   Download Excel
+</a>
+
+</body>
+</html>
