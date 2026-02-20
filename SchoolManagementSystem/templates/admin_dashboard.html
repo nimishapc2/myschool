@@ -208,6 +208,14 @@
        class="{% if request.resolver_match.url_name == 'mark_attendance' %}active-sublink{% endif %}">
        Post Attendance
     </a>
+    <a href="{% url 'SchoolAdmin:attendance_report' %}"
+       class="{% if request.resolver_match.url_name == 'mark_attendance' %}active-sublink{% endif %}">
+       View Attendance
+    </a>
+    <a href="{% url 'SchoolAdmin:monthly_attendance' %}"
+       class="{% if request.resolver_match.url_name == 'mark_attendance' %}active-sublink{% endif %}">
+       Monthly Attendance
+    </a>
 
 </div>
 </div>
