@@ -57,3 +57,13 @@ def teacher_dashboard(request):
 @login_required
 def student_dashboard(request):
     return render(request, "student_dashboard.html")
+
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # redirect to your login url name
