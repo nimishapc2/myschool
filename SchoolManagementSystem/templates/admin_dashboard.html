@@ -153,59 +153,60 @@
 
 </div>
 
-<!-- Announcement-->
-<a class="d-flex justify-content-between align-items-center {% if request.resolver_match.url_name == 'mark_attendance' or request.resolver_match.url_name == 'attendance_report' or request.resolver_match.url_name == 'monthly_attendance' %}active-link{% endif %}"
+<!-- ================= Announcement ================= -->
+<a class="d-flex justify-content-between align-items-center 
+   {% if request.resolver_match.url_name == 'add_announcement' or request.resolver_match.url_name == 'announcement_list' %}active-link{% endif %}"
    data-bs-toggle="collapse"
-   href="#attendanceMenu"
+   href="#announcementMenu"
    role="button">
 
-    <span><i class="bi bi-calendar-check me-2"></i> Announcement</span>
-    <i class="bi bi-chevron-down rotate-icon {% if request.resolver_match.url_name == 'announcement' or request.resolver_match.url_name == 'attendance_report' or request.resolver_match.url_name == 'monthly_attendance' %}rotate{% endif %}"></i>
+    <span><i class="bi bi-megaphone me-2"></i> Announcement</span>
 
+    <i class="bi bi-chevron-down rotate-icon 
+       {% if request.resolver_match.url_name == 'add_announcement' or request.resolver_match.url_name == 'announcement_list' %}rotate{% endif %}">
+    </i>
 </a>
 
-<div class="collapse {% if request.resolver_match.url_name == 'Announcement' or request.resolver_match.url_name == 'attendance_report' or request.resolver_match.url_name == 'monthly_attendance' %}show{% endif %} ps-4"
-     id="attendanceMenu">
-
+<div class="collapse 
+    {% if request.resolver_match.url_name == 'add_announcement' or request.resolver_match.url_name == 'announcement_list' %}show{% endif %} 
+    ps-4"
+    id="announcementMenu">
 
     <a href="{% url 'SchoolAdmin:add_announcement' %}"
        class="{% if request.resolver_match.url_name == 'add_announcement' %}active-sublink{% endif %}">
        Post Announcement 
     </a>
+
     <a href="{% url 'SchoolAdmin:announcement_list' %}"
        class="{% if request.resolver_match.url_name == 'announcement_list' %}active-sublink{% endif %}">
        View Announcements 
     </a>
+
 </div>
-<!-- Attendance -->
+
+
+<!-- ================= Attendance ================= -->
 <a class="d-flex justify-content-between align-items-center 
-   {% if request.resolver_match.url_name == 'post_attendance' or request.resolver_match.url_name == 'view_attendance' %}active-link{% endif %}"
+   {% if request.resolver_match.url_name == 'mark_attendance' or request.resolver_match.url_name == 'view_attendance' %}active-link{% endif %}"
    data-bs-toggle="collapse"
    href="#attendanceMenu"
    role="button">
 
     <span><i class="bi bi-calendar-check me-2"></i> Attendance</span>
-    
+
     <i class="bi bi-chevron-down rotate-icon 
-       {% if request.resolver_match.url_name == 'post_attendance' or request.resolver_match.url_name == 'view_attendance' %}rotate{% endif %}">
+       {% if request.resolver_match.url_name == 'mark_attendance' or request.resolver_match.url_name == 'view_attendance' %}rotate{% endif %}">
     </i>
 </a>
 
 <div class="collapse 
-    {% if request.resolver_match.url_name == 'post_attendance' or request.resolver_match.url_name == 'view_attendance' %}show{% endif %} 
+    {% if request.resolver_match.url_name == 'mark_attendance' or request.resolver_match.url_name == 'view_attendance' %}show{% endif %} 
     ps-4"
     id="attendanceMenu">
 
-    <!-- Post Attendance -->
     <a href="{% url 'SchoolAdmin:mark_attendance' %}"
-       class="{% if request.resolver_match.url_name == 'post_attendance' %}active-sublink{% endif %}">
+       class="{% if request.resolver_match.url_name == 'mark_attendance' %}active-sublink{% endif %}">
        Post Attendance
-    </a>
-
-    <!-- View Attendance -->
-    <a href="{% url 'SchoolAdmin:view_attendance' %}"
-       class="{% if request.resolver_match.url_name == 'view_attendance' %}active-sublink{% endif %}">
-       View Attendance
     </a>
 
 </div>
