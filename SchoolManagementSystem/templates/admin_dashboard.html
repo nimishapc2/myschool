@@ -177,7 +177,38 @@
        View Announcements 
     </a>
 </div>
+<!-- Attendance -->
+<a class="d-flex justify-content-between align-items-center 
+   {% if request.resolver_match.url_name == 'post_attendance' or request.resolver_match.url_name == 'view_attendance' %}active-link{% endif %}"
+   data-bs-toggle="collapse"
+   href="#attendanceMenu"
+   role="button">
 
+    <span><i class="bi bi-calendar-check me-2"></i> Attendance</span>
+    
+    <i class="bi bi-chevron-down rotate-icon 
+       {% if request.resolver_match.url_name == 'post_attendance' or request.resolver_match.url_name == 'view_attendance' %}rotate{% endif %}">
+    </i>
+</a>
+
+<div class="collapse 
+    {% if request.resolver_match.url_name == 'post_attendance' or request.resolver_match.url_name == 'view_attendance' %}show{% endif %} 
+    ps-4"
+    id="attendanceMenu">
+
+    <!-- Post Attendance -->
+    <a href="{% url 'SchoolAdmin:mark_attendance' %}"
+       class="{% if request.resolver_match.url_name == 'post_attendance' %}active-sublink{% endif %}">
+       Post Attendance
+    </a>
+
+    <!-- View Attendance -->
+    <a href="{% url 'SchoolAdmin:view_attendance' %}"
+       class="{% if request.resolver_match.url_name == 'view_attendance' %}active-sublink{% endif %}">
+       View Attendance
+    </a>
+
+</div>
 </div>
 
 

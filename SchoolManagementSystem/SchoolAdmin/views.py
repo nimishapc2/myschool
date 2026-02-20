@@ -288,10 +288,8 @@ def view_students(request):
 
     return render(request, "view_students.html", context)
 
+
 # Attendance Posting
-
-
-
 def mark_attendance(request):
 
     classes = SchoolClass.objects.all()
